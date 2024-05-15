@@ -8,7 +8,7 @@ def remove_text(image_path, mask_path):
     mask = cv2.imread(mask_path, 0)  # Загружаем как одноканальное изображение
 
     # Применяем инвертированную маску к изображению
-    #inverted_mask = cv2.bitwise_not(mask)
+    # inverted_mask = cv2.bitwise_not(mask)
     result = cv2.inpaint(image, mask, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
 
     return result

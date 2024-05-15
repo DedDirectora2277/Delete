@@ -1,5 +1,6 @@
 import io
 
+import cv2
 from django.core.signals import request_finished
 from django.db import transaction
 from django.db.models.signals import post_delete
@@ -58,7 +59,8 @@ class ProcessImageView(APIView):
             #     return Response("Failed to process image", status=response.status_code)
 
             processed_np = remove_text(processed_image.image.path, processed_image.mask.path)
-            processed_pil_image = Image.fromarray(processed_np)
+            processed_image_rgb = cv2.cvtColor(processed_np, cv2.COLOR_BGR2RGB)
+            processed_pil_image = Image.fromarray(processed_image_rgb)
 
             processed_io = io.BytesIO()
             processed_pil_image.save(processed_io, format='JPEG')
@@ -85,7 +87,7 @@ class ProcessImageView(APIView):
             if processed_image.image:
                 processed_image.image.delete()
             if processed_image.mask:
-                 processed_image.mask.delete()
+                processed_image.mask.delete()
             if processed_image.processed_image:
                 processed_image.processed_image.delete()
 
